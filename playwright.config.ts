@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import { BaseClient } from "./api/clients/BaseClient";
+import { BaseClient } from "resources/clients/BaseClient";
 
 /**
  * Read environment variables from file.
