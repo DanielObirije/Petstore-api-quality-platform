@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { BaseClient } from "../../../api/clients/BaseClient";
+import { BaseClient } from "../../../resources/clients/BaseClient";
 
 test.describe("auth/login POST request @auth", async () => {
   const username = BaseClient.ADMIN_NAME;
@@ -31,9 +31,7 @@ test.describe("auth/login POST request @auth", async () => {
     expect(body).toHaveProperty("error");
   });
 
-  test("POST with valid username and  invalid password", async ({
-    request,
-  }) => {
+  test("POST with valid username and  invalid password", async ({ request }) => {
     const response = await request.post("api/auth/login", {
       data: {
         username: username,
@@ -46,9 +44,7 @@ test.describe("auth/login POST request @auth", async () => {
     expect(body).toHaveProperty("error");
   });
 
-  test("POST with invalid username and  valid password", async ({
-    request,
-  }) => {
+  test("POST with invalid username and  valid password", async ({ request }) => {
     const response = await request.post("api/auth/login", {
       data: {
         username: username,
