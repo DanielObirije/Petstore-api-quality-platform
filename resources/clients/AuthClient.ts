@@ -1,5 +1,6 @@
 import { expect, request } from "@playwright/test";
 import { BaseClient } from "./BaseClient";
+import { faker } from "@faker-js/faker";
 const baseurl = BaseClient.URL;
 let cookies;
 
@@ -51,5 +52,22 @@ export class AuthClient extends BaseClient {
     // const body = await response.json();
     // console.warn(body);
     return body.token;
+  }
+
+  async createheaderWithToken(token?: string) {
+    if (!token) {
+      token = await this.createToken(BaseClient.ADMIN_NAME, BaseClient.ADMIN_PASSWORD);
+    }
+    const header = {
+      Authorization: `Bearer ${token}`,
+    };
+    return header;
+  }
+  
+  createinvalidToken() {
+    const header = {
+      Authorization: `Bearer ${faker.string.alphanumeric(10)}`,
+    };
+    return header;
   }
 }
