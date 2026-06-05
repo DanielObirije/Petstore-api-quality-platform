@@ -69,6 +69,11 @@ export class RoomClient extends BaseClient {
     return response;
   }
 
+  // async createRoomById(roomname: string, price: number) {
+  //   const roomBody = 
+  //   return response;
+  // }
+
   defultRoom = {
     roomid: 1,
     roomName: "100",
