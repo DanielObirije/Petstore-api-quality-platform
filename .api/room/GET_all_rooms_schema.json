@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "rooms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "accessible": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "image": {
+            "type": "string"
+          },
+          "roomName": {
+            "type": "string"
+          },
+          "roomPrice": {
+            "type": "integer"
+          },
+          "roomid": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "accessible",
+          "description",
+          "features",
+          "image",
+          "roomName",
+          "roomPrice",
+          "roomid",
+          "type"
+        ]
+      }
+    }
+  },
+  "required": [
+    "rooms"
+  ]
+}

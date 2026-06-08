@@ -9,13 +9,13 @@ export async function validateJsonSchema(fileName: string, filePath: string, bod
   const jsonName = fileName;
 
   if (createSchema) {
-    createJsonSchema(fileName, filePath, body);
+    await createJsonSchema(fileName, filePath, body);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   //const existingSchema = require(`../../resources/api/${path}/${jsonName}_schema.json`);
 
-  const dynamicPath = join(__dirname, "../../resources/api", path, `${jsonName}_schema.json`);
+  const dynamicPath = join(__dirname, "../../.api", path, `${jsonName}_schema.json`);
+  console.log("this is the path" + dynamicPath);
   const existingSchema = JSON.parse(await readFile(dynamicPath, "utf8"));
 
   const ajv = new Ajv({ allErrors: false });

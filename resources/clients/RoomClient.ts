@@ -57,8 +57,9 @@ export class RoomClient extends BaseClient {
 
   async createRoom(roomname: string, price: number) {
     const headers = await auth.createheaderWithToken();
+    console.log(headers.Authorization)
     const roomBody = await this.createRandomRoomBody(roomname, price);
-    const response = await fetch(baseurl + "api/rooms", {
+    const response = await fetch(baseurl + "api/room", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
