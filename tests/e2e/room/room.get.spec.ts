@@ -38,7 +38,6 @@ test.describe("room/ GET requests @room", () => {
     });
     expect(response.status).toBe(200);
     const body = await response.json();
-    console.log(body);
     await validateJsonSchema("GET_room_id", "room", body);
   });
 
@@ -46,16 +45,16 @@ test.describe("room/ GET requests @room", () => {
     const roomPrice = 100;
     const roomName = "GET";
     const response = await roomClient.createRoom(roomName, roomPrice);
-    console.log(response);
-    // expect(response.status).toBe(200);
-    // const roomsBody = await fetch(baseurl + "api/room", {
-    //   method: "GET",
-    // });
-    // expect(roomsBody.status).toBe(200);
-    // const roomsBodyJson: GetRoomsResponse = await roomsBody.json();
 
-    // const rooms = roomsBodyJson.rooms.find((r) => r.roomName === roomName && r.roomPrice === roomPrice);
-    // expect(rooms).toBeDefined();
+    expect(response.status).toBe(200);
+    const roomsBody = await fetch(baseurl + "api/room", {
+      method: "GET",
+    });
+    expect(roomsBody.status).toBe(200);
+    const roomsBodyJson: GetRoomsResponse = await roomsBody.json();
+
+    const rooms = roomsBodyJson.rooms.find((r) => r.roomName === roomName && r.roomPrice === roomPrice);
+    expect(rooms).toBeDefined();
 
     // await validateJsonSchema("GET_room_id", "room", roomsBodyJson);
   });

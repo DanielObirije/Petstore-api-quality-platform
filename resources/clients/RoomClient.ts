@@ -44,26 +44,25 @@ export class RoomClient extends BaseClient {
 
   async createRandomRoomBody(roomName: string, roomPrice: number) {
     const roomBody = {
-      name: roomName || faker.lorem.words(3),
+      roomName: roomName || faker.lorem.words(3),
       type: roomType[faker.number.int({ min: 0, max: roomType.length - 1 })],
       accessability: faker.datatype.boolean(),
       image: faker.image.url(),
       description: faker.lorem.sentence(),
-      price: roomPrice || faker.string.numeric(3),
+      roomPrice: roomPrice || faker.string.numeric(3),
       features: this.getRandomRoomFeatures(faker.number.int({ min: 1, max: 5 })),
     };
     return roomBody;
   }
 
   async createRoom(roomname: string, price: number) {
-    const headers = await auth.createheaderWithToken();
-    console.log(headers.Authorization)
+    const cookie = await auth.createToken();
     const roomBody = await this.createRandomRoomBody(roomname, price);
     const response = await fetch(baseurl + "api/room", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...headers,
+        Cookie: `token=${cookie}`,
       },
       body: JSON.stringify(roomBody),
     });
@@ -71,7 +70,7 @@ export class RoomClient extends BaseClient {
   }
 
   // async createRoomById(roomname: string, price: number) {
-  //   const roomBody = 
+  //   const roomBody =
   //   return response;
   // }
 
