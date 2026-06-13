@@ -42,9 +42,9 @@ export class RoomClient extends BaseClient {
     return Array.from(new Set(feature));
   }
 
-  async createRandomRoomBody(roomName: string, roomPrice: number) {
+  async createRandomRoomBody(roomName?: string, roomPrice?: number) {
     const roomBody = {
-      roomName: roomName || faker.lorem.words(3),
+      roomName: roomName || faker.lorem.words(5),
       type: roomType[faker.number.int({ min: 0, max: roomType.length - 1 })],
       accessability: faker.datatype.boolean(),
       image: faker.image.url(),
@@ -55,11 +55,52 @@ export class RoomClient extends BaseClient {
     return roomBody;
   }
 
-  async createRoom(roomname: string, price: number) {
+  async createRoom(roomname?: string, price?: number, body?: object) {
     const cookie = await auth.createToken();
-    const roomBody = await this.createRandomRoomBody(roomname, price);
+    // const roomBody = body ?? (await this.createRandomRoomBody());
+    const roomBody = body ?? (await this.createRandomRoomBody(roomname, price));
+    // console.log("room body", roomBody);
     const response = await fetch(baseurl + "api/room", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${cookie}`,
+      },
+      body: JSON.stringify(roomBody),
+    });
+    return response;
+  }
+
+  async deleteRoom(roomID: number) {
+    const cookie = await auth.createToken();
+    const response = await fetch(baseurl + `api/room/${roomID}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${cookie}`,
+      },
+    });
+    return response;
+  }
+  // async UpdateRoom(roomID: number) {
+  //   const cookie = await auth.createToken();
+  //   const roomBody = await this.createRandomRoomBody();
+  //   const response = await fetch(baseurl + `api/room/${roomID}`, {
+  //     method: "PUT",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Cookie: `token=${cookie}`,
+  //     },
+  //     body: JSON.stringify(roomBody),
+  //   });
+  //   return response;
+  // }
+
+  async UpdateRoom(roomID: number, body?: object) {
+    const cookie = await auth.createToken();
+    const roomBody = body ?? (await this.createRandomRoomBody());
+    const response = await fetch(baseurl + `api/room/${roomID}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Cookie: `token=${cookie}`,
@@ -86,3 +127,5 @@ export class RoomClient extends BaseClient {
     roomPrice: 100,
   };
 }
+
+

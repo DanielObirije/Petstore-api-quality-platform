@@ -1,0 +1,89 @@
+import { validateJsonSchema } from "../../../resources/helpers/validateJsonSchema";
+import { RoomClient } from "../../../resources/clients/RoomClient";
+import { BaseClient } from "../../../resources/clients/BaseClient";
+import { expect, test } from "@playwright/test";
+
+const roomClient = new RoomClient();
+const baseurl = BaseClient.URL;
+
+interface Room {
+  accessible: boolean;
+  description: string;
+  features: string[];
+  image: string;
+  roomName: string;
+  roomPrice: number;
+  roomid: number;
+  type: string;
+}
+
+interface GetRoomsResponse {
+  rooms: Room[];
+}
+
+test.describe("room/ GET requests @room", () => {
+  test("POST create room and validate creation @happy ", async () => {
+    const roomPrice = 100;
+    const roomName = "GET";
+    const response = await roomClient.createRoom(roomName, roomPrice);
+
+    expect(response.status).toBe(200);
+    const roomsBody = await fetch(baseurl + "api/room", {
+      method: "GET",
+    });
+    expect(roomsBody.status).toBe(200);
+    const roomsBodyJson: GetRoomsResponse = await roomsBody.json();
+
+    const rooms = roomsBodyJson.rooms.find((r) => r.roomName === roomName && r.roomPrice === roomPrice);
+    expect(rooms).toBeDefined();
+
+    await validateJsonSchema("POST_room", "room", roomsBodyJson);
+  });
+
+  // test("POST create room with empty body ", async () => {
+  //   const roomPrice = 100;
+  //   const roomName = "GET";
+  //   const body = {};
+  //   const response = await roomClient.createRoom(roomName, roomPrice, body);
+
+  //   expect(response.status).toBe(200);
+  //   expect(response).toMatchObject({
+  //     errors: ["must be greater than or equal to 1", "Room name must be set", "must not be null", "Type must be set"],
+  //   });
+  // });
+
+  // test("POST create room with empty body", async () => {
+  //   const roomPrice = undefined;
+  //   const roomName = undefined;
+  //   const body = undefined;
+  //   const response = await roomClient.createRoom(roomName, roomPrice, body);
+
+  //   expect(response.status).toBe(500);
+  //   expect(response).toMatchObject({
+  //     errors: ["An unexpected error occurred"],
+  //   });
+  // });
+
+  test("POST /create room with invalid data types ", async () => {
+    const roomPrice = undefined;
+    const roomName = undefined;
+    const body = {
+      roomName: 1,
+      type: 1,
+      accessible: 1,
+      image: "https://blog.postman.com/wp-content/uploads/2014/07/logo.png",
+      description: "This is room 101, dare you enter?",
+      roomPrice: 100,
+      features: ["WiFi", "Safe"],
+    };
+
+    const response = await roomClient.createRoom(roomName, roomPrice, body);
+
+    expect(response.status).toBe(400);
+    const jsonbody = await response.json();
+    expect(jsonbody).toMatchObject({
+      errors: ["Type can only contain the room options Single, Double, Twin, Family or Suite"],
+    });
+  
+  });
+});
